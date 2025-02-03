@@ -1,7 +1,6 @@
 ﻿using Terraria;
 using TerrariaApi.Server;
 using TShockAPI;
-using TShockPlugin.Utils;
 
 namespace TShockPlugin
 {
