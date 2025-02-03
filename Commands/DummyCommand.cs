@@ -13,6 +13,6 @@ public class DummyCommand : Models.Command
     public override void Execute(CommandArgs args)
     {
         TSPlayer player = args.Player;
-        player.SendMessage($"Hi {player.Name}", Color.Blue);
+        player.SendMessage($"Hi {player.Name}!", Color.Blue);
     }
 }
