@@ -8,11 +8,7 @@ namespace TShockPlugin;
 public class PluginSettings
 {
     public static string PluginDisplayName { get; set; } = "Plugin";
-    public static readonly string ConfigPath = Path.Combine(
-        TShock.SavePath,
-        "PluginConfigs",
-        "TemplateConfig.json"
-    );
+    public static readonly string ConfigPath = Path.Combine(TShock.SavePath, "TemplateConfig.json");
     public static PluginSettings Config { get; private set; } = new();
 
     public static void Save()
