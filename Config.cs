@@ -32,7 +32,7 @@ public class PluginSettings
                     Config = deserializedConfig;
                     return new MessageResponse()
                     {
-                        Text = $"[{PluginDisplayName}] Loaded",
+                        Text = $"[{PluginDisplayName}] Loaded config.",
                         Color = Color.LimeGreen,
                     };
                 }
