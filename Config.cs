@@ -1,7 +1,7 @@
 using Microsoft.Xna.Framework;
 using Newtonsoft.Json;
 using TShockAPI;
-using TShockPlugin.Utils;
+using TShockPlugin.Models;
 
 namespace TShockPlugin;
 
@@ -20,7 +20,7 @@ public class PluginSettings
         File.WriteAllText(ConfigPath, configJson);
     }
 
-    public static MessageResponse Load()
+    public static ResponseMessage Load()
     {
         if (File.Exists(ConfigPath))
         {
@@ -33,7 +33,7 @@ public class PluginSettings
                 if (deserializedConfig != null)
                 {
                     Config = deserializedConfig;
-                    return new MessageResponse()
+                    return new ResponseMessage()
                     {
                         Text = $"[{PluginDisplayName}] Loaded config.",
                         Color = Color.LimeGreen,
@@ -41,7 +41,7 @@ public class PluginSettings
                 }
                 else
                 {
-                    return new MessageResponse()
+                    return new ResponseMessage()
                     {
                         Text =
                             $"[{PluginDisplayName}] Config file was found, but deserialization returned null.",
@@ -54,7 +54,7 @@ public class PluginSettings
                 TShock.Log.ConsoleError(
                     $"[{PluginDisplayName}] Error loading config: {ex.Message}"
                 );
-                return new MessageResponse()
+                return new ResponseMessage()
                 {
                     Text =
                         $"[{PluginDisplayName}] Error loading config. Check logs for more details.",
@@ -65,7 +65,7 @@ public class PluginSettings
         else
         {
             Save();
-            return new MessageResponse()
+            return new ResponseMessage()
             {
                 Text =
                     $"[{PluginDisplayName}] Config file doesn't exist yet. A new one has been created.",

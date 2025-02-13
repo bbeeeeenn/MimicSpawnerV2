@@ -1,6 +1,8 @@
-namespace TShockPlugin.Utils;
+using System;
 
-public struct MessageResponse
+namespace TShockPlugin.Models;
+
+public struct ResponseMessage
 {
     public string Text;
     public Microsoft.Xna.Framework.Color Color;
