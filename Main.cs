@@ -7,7 +7,8 @@ namespace TShockPlugin
     [ApiVersion(2, 1)]
     public class TShockPlugin : TerrariaPlugin
     {
-        public override string Name => "TShock Plugin";
+        public static readonly string PluginName = "TShockPlugin"; // Configure this
+        public override string Name => PluginName;
         public override string Author => "TRANQUILZOIIP - github.com/bbeeeeenn";
         public override string Description => base.Description;
         public override Version Version => base.Version;
@@ -17,8 +18,6 @@ namespace TShockPlugin
 
         public override void Initialize()
         {
-            PluginSettings.PluginDisplayName = Name;
-
             // Load config
             TShock.Log.ConsoleInfo(PluginSettings.Load().Text);
             // Load events
