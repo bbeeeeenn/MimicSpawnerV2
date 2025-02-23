@@ -17,6 +17,8 @@ namespace TShockPlugin
 
         public override void Initialize()
         {
+            PluginSettings.PluginDisplayName = Name;
+
             // Load config
             TShock.Log.ConsoleInfo(PluginSettings.Load().Text);
             // Load events

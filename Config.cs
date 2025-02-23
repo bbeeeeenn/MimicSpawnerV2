@@ -12,8 +12,11 @@ public class PluginSettings
         TShock.SavePath,
         $"{PluginDisplayName}.json"
     );
-    public static PluginSettings Config { get; private set; } = new();
+    public static PluginSettings Config { get; set; } = new();
 
+    #region Configs
+
+    #endregion
     public static void Save()
     {
         string configJson = JsonConvert.SerializeObject(Config, Formatting.Indented);
