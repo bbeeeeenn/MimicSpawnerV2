@@ -1,6 +1,6 @@
 # MimicSpawner Plugin
 
-The **MimicSpawner** plugin allows players to instantly spawn a Mimic, giving them greater control and flexibility during gameplay.
+A plugin that allows players to instantly spawn a Mimic.
 
 ## How to Use
 - Hold a **Key of Night** or **Key of Light**, depending on which type of Mimic you want to spawn.
