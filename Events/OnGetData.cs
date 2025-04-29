@@ -56,9 +56,9 @@ public class OnGetData : Models.Event
         )
             return;
 
-        int ChestIndex = GetChestIndex(player);
         if (PluginSettings.Config.RequireChest)
         {
+            int ChestIndex = GetChestIndex(player);
             if (ChestIndex < 0)
             {
                 player.SendErrorMessage(
