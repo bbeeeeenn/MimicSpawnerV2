@@ -58,16 +58,17 @@ public class OnGetData : Models.Event
 
         if (PluginSettings.Config.RequireChest)
         {
-            int ChestIndex = GetChestIndex(player);
-            if (ChestIndex < 0)
+            int? chestIndex = GetChestIndex(player);
+            if (chestIndex == null)
             {
                 player.SendErrorMessage(
-                    "You must have at least any type of chest in your inventory to summon a Mimic."
+                    "You must have at least one chest of any type in your inventory to summon a Mimic."
                 );
                 return;
             }
 
-            Item chest = player.TPlayer.inventory[ChestIndex];
+            Item chest = player.TPlayer.inventory[(int)chestIndex];
+
             chest.stack--;
             NetMessage.SendData(
                 (int)PacketTypes.PlayerSlot,
@@ -75,7 +76,7 @@ public class OnGetData : Models.Event
                 -1,
                 null,
                 playerId,
-                ChestIndex,
+                (float)chestIndex,
                 chest.stack,
                 chest.prefix,
                 chest.netID
@@ -99,7 +100,7 @@ public class OnGetData : Models.Event
         SpawnMimic(player, selectedItem.netID == Terraria.ID.ItemID.NightKey);
     }
 
-    private static int GetChestIndex(TSPlayer player)
+    private static int? GetChestIndex(TSPlayer player)
     {
         for (int i = 0; i < NetItem.InventorySlots; i++)
         {
@@ -109,7 +110,7 @@ public class OnGetData : Models.Event
                 return i;
             }
         }
-        return -1;
+        return null;
     }
 
     private static void SpawnMimic(TSPlayer player, bool nightKey)
