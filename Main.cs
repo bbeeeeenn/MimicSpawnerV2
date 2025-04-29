@@ -11,7 +11,7 @@ namespace MimicSpawner
         public override string Name => PluginName;
         public override string Author => "TRANQUILZOIIP - github.com/bbeeeeenn";
         public override string Description => base.Description;
-        public override Version Version => base.Version;
+        public override Version Version => new(2, 0);
 
         public TShockPlugin(Main game)
             : base(game) { }
