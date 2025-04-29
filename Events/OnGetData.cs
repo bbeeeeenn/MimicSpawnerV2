@@ -142,7 +142,7 @@ public class OnGetData : Models.Event
         }
         else
         {
-            player.SendErrorMessage("Can't summon a mimic.");
+            player.SendErrorMessage("Can't summon a Mimic. The NPC cap might have been reached.");
             return false;
         }
     }
