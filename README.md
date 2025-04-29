@@ -1,3 +1,12 @@
-# TShock Plugin Template
+# MimicSpawner Plugin
 
-This template provides a solid foundation for creating Terraria plugins using TShock. It includes essential features such as configuration management, event handling, and command registration, making it easier for you to get started with your plugin development.
+The **MimicSpawner** plugin allows players to instantly spawn a Mimic, giving them greater control and flexibility during gameplay.
+
+## How to Use
+- Hold a **Key of Night** or **Key of Light**, depending on which type of Mimic you want to spawn.
+- Use the key as if it were a consumable item to summon the Mimic instantly.
+- **Note:** Using a **Key of Night** will randomly spawn either a **Corrupt Mimic** or a **Crimson Mimic**.
+
+## Configuration
+- **`RequireChest`** (Default: `true`) — Determines whether players must have at least one chest in their inventory to summon a Mimic.
+- **`CooldownInSeconds`** (Default: `1`) — Sets the cooldown time (in seconds) before a player can spawn another Mimic.

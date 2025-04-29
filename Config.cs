@@ -16,9 +16,8 @@ public class PluginSettings
     public static PluginSettings Config { get; set; } = new();
 
     #region Configs
-    public bool Enabled = true;
     public bool RequireChest = true;
-    public int CooldownInSeconds = 2;
+    public int CooldownInSeconds = 1;
     #endregion
 
 

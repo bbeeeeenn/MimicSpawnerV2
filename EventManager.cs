@@ -10,6 +10,7 @@ public class EventManager
     {
         // Events
         new OnReload(),
+        new OnGetData(),
     };
 
     public static void RegisterAll(TerrariaPlugin plugin)

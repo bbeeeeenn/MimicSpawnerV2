@@ -1,5 +1,3 @@
-using System;
-
 namespace MimicSpawner.Models;
 
 public struct ResponseMessage
