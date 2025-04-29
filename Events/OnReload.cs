@@ -1,9 +1,9 @@
+using MimicSpawner.Models;
 using TerrariaApi.Server;
 using TShockAPI;
 using TShockAPI.Hooks;
-using TShockPlugin.Models;
 
-namespace TShockPlugin.Events;
+namespace MimicSpawner.Events;
 
 public class OnReload : Event
 {

@@ -1,8 +1,8 @@
+using MimicSpawner.Events;
+using MimicSpawner.Models;
 using TerrariaApi.Server;
-using TShockPlugin.Events;
-using TShockPlugin.Models;
 
-namespace TShockPlugin;
+namespace MimicSpawner;
 
 public class EventManager
 {

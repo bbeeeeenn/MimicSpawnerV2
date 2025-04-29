@@ -1,6 +1,6 @@
 using System;
 
-namespace TShockPlugin.Models;
+namespace MimicSpawner.Models;
 
 public struct ResponseMessage
 {

@@ -1,7 +1,7 @@
 using Microsoft.Xna.Framework;
 using TShockAPI;
 
-namespace TShockPlugin.Commands;
+namespace MimicSpawner.Commands;
 
 public class DummyCommand : Models.Command
 {

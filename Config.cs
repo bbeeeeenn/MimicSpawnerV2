@@ -1,9 +1,9 @@
 using Microsoft.Xna.Framework;
+using MimicSpawner.Models;
 using Newtonsoft.Json;
 using TShockAPI;
-using TShockPlugin.Models;
 
-namespace TShockPlugin;
+namespace MimicSpawner;
 
 public class PluginSettings
 {
@@ -14,9 +14,14 @@ public class PluginSettings
     public static readonly string ConfigPath = Path.Combine(PluginDirectory, $"config.json");
 
     public static PluginSettings Config { get; set; } = new();
-    #region Configs
 
+    #region Configs
+    public bool Enabled = true;
+    public bool RequireChest = true;
+    public int CooldownInSeconds = 2;
     #endregion
+
+
     public static void Save()
     {
         string configJson = JsonConvert.SerializeObject(Config, Formatting.Indented);

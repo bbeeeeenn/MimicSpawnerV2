@@ -1,14 +1,14 @@
-using TShockPlugin.Commands;
-using TShockPlugin.Models;
+using MimicSpawner.Commands;
+using MimicSpawner.Models;
 
-namespace TShockPlugin;
+namespace MimicSpawner;
 
 public class CommandManager
 {
     public static readonly List<Command> Commands = new()
     {
         // Commands
-        new DummyCommand(),
+        // new DummyCommand(),
     };
 
     public static void RegisterAll()

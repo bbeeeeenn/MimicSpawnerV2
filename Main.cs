@@ -2,12 +2,12 @@
 using TerrariaApi.Server;
 using TShockAPI;
 
-namespace TShockPlugin
+namespace MimicSpawner
 {
     [ApiVersion(2, 1)]
     public class TShockPlugin : TerrariaPlugin
     {
-        public static readonly string PluginName = "TShockPluginTemplate"; // Configure this
+        public static readonly string PluginName = "MimicSpawner"; // Configure this
         public override string Name => PluginName;
         public override string Author => "TRANQUILZOIIP - github.com/bbeeeeenn";
         public override string Description => base.Description;
@@ -34,5 +34,7 @@ namespace TShockPlugin
             }
             base.Dispose(disposing);
         }
+
+        public static readonly Dictionary<string, DateTime> LastSummon = new();
     }
 }
