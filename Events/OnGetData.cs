@@ -56,9 +56,11 @@ public class OnGetData : Models.Event
         )
             return;
 
+        int? chestIndex = null;
+        Item? chest = null;
         if (PluginSettings.Config.RequireChest)
         {
-            int? chestIndex = GetChestIndex(player);
+            chestIndex = GetChestIndex(player);
             if (chestIndex == null)
             {
                 player.SendErrorMessage(
@@ -67,22 +69,13 @@ public class OnGetData : Models.Event
                 return;
             }
 
-            Item chest = player.TPlayer.inventory[(int)chestIndex];
-
-            chest.stack--;
-            NetMessage.SendData(
-                (int)PacketTypes.PlayerSlot,
-                -1,
-                -1,
-                null,
-                playerId,
-                (float)chestIndex,
-                chest.stack,
-                chest.prefix,
-                chest.netID
-            );
+            chest = player.TPlayer.inventory[(int)chestIndex];
         }
 
+        if (!SpawnMimic(player, selectedItem.netID == Terraria.ID.ItemID.NightKey))
+            return;
+
+        // Consume key
         TShockPlugin.LastSummon[player.Name] = DateTime.Now;
         selectedItem.stack--;
         NetMessage.SendData(
@@ -97,7 +90,22 @@ public class OnGetData : Models.Event
             selectedItem.netID
         );
 
-        SpawnMimic(player, selectedItem.netID == Terraria.ID.ItemID.NightKey);
+        // Consume chest if Config.RequireChest
+        if (chest != null && chestIndex != null)
+        {
+            chest.stack--;
+            NetMessage.SendData(
+                (int)PacketTypes.PlayerSlot,
+                -1,
+                -1,
+                null,
+                playerId,
+                (float)chestIndex,
+                chest.stack,
+                chest.prefix,
+                chest.netID
+            );
+        }
     }
 
     private static int? GetChestIndex(TSPlayer player)
@@ -113,7 +121,7 @@ public class OnGetData : Models.Event
         return null;
     }
 
-    private static void SpawnMimic(TSPlayer player, bool nightKey)
+    private static bool SpawnMimic(TSPlayer player, bool nightKey)
     {
         Vector2 playerPosition = player.TPlayer.position;
         int offset = random.Next(-400, 400);
@@ -126,14 +134,16 @@ public class OnGetData : Models.Event
         int type = nightKey
             ? evilMimics[random.Next(evilMimics.Count)]
             : Terraria.ID.NPCID.BigMimicHallow;
-        int index = NPC.NewNPC(null, (int)position.X, (int)position.Y, type);
-        if (index != 200)
+        int npcIndex = NPC.NewNPC(null, (int)position.X, (int)position.Y, type);
+        if (npcIndex != 200)
         {
             player.SendSuccessMessage($"You summoned a {TShock.Utils.GetNPCById(type).FullName}!");
+            return true;
         }
         else
         {
             player.SendErrorMessage("Can't summon a mimic.");
+            return false;
         }
     }
 }
