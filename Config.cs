@@ -16,8 +16,25 @@ public class PluginSettings
     public static PluginSettings Config { get; set; } = new();
 
     #region Configs
-    public bool RequireChest = true;
+    public bool Enabled = true;
+    public bool RequireChest = false;
     public int CooldownInSeconds = 1;
+    public string Mode = "biome";
+    public string[] Help =
+    {
+        "You use [Key of Night] to summon an Evil Mimic",
+        "Available modes: 'default', 'biome', 'random'",
+        "default: Follows the type of evil mimic the world would normally spawn. Recommended for the 'getfixedboi' seed, where the Evil Mimic type changes each day. Can summon anywhere.",
+        "biome: When using a [Night Key], you must be in an evil biome. The type of Evil Mimic that appears will match the biome.",
+        "random: Randomly chooses between the two Evil Mimic types. Can summon anywhere.",
+        "[CAUTION]: 'mode' is not case-sensitive. If an invalid value is entered, it will automatically set to 'default'.",
+    };
+    public bool WeakerMimics = true;
+    public string[] Help2 =
+    {
+        "You use [Golden Key] to summon a Mimic",
+        "The summoned mimic will be an [Ice Mimic] if you're in a [Snow biome].",
+    };
     #endregion
 
 
@@ -54,6 +71,23 @@ public class PluginSettings
                 if (deserializedConfig != null)
                 {
                     Config = deserializedConfig;
+
+                    // Set to default if 'mode' is invalid
+                    if (
+                        !new List<string>() { "default", "biome", "random" }.Contains(
+                            Config.Mode.ToLower()
+                        )
+                    )
+                    {
+                        Config.Mode = "default";
+                        Save();
+                    }
+                    if (Config.CooldownInSeconds < 1)
+                    {
+                        Config.CooldownInSeconds = 1;
+                        Save();
+                    }
+
                     return new ResponseMessage()
                     {
                         Text = $"[{TShockPlugin.PluginName}] Loaded config.",

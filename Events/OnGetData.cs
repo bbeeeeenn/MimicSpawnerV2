@@ -1,5 +1,6 @@
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.ID;
 using TerrariaApi.Server;
 using TShockAPI;
 
@@ -17,12 +18,12 @@ public class OnGetData : Models.Event
         ServerApi.Hooks.NetGetData.Register(plugin, EventHandler);
     }
 
-    private static readonly Random random = new();
-
     private void EventHandler(GetDataEventArgs args)
     {
-        if (args.MsgID != PacketTypes.PlayerUpdate)
+        if (!PluginSettings.Config.Enabled || args.MsgID != PacketTypes.PlayerUpdate)
+        {
             return;
+        }
 
         using BinaryReader reader = new(
             new MemoryStream(args.Msg.readBuffer, args.Index, args.Length)
@@ -32,118 +33,91 @@ public class OnGetData : Models.Event
         _ = reader.ReadByte();
         _ = reader.ReadByte();
         _ = reader.ReadByte();
-        var selectedSlot = reader.ReadByte();
+        var selectedItemIndex = reader.ReadByte();
 
-        bool useItem = control[5];
-        if (!useItem)
+        if (!control[5]) // if not useitem
+        {
             return;
+        }
 
         TSPlayer player = TShock.Players[playerId];
-        Item selectedItem = player.TPlayer.inventory[selectedSlot];
+        Item selectedItem = player.TPlayer.inventory[selectedItemIndex];
 
         if (
-            !useItem
-            || !new List<int>()
-            {
-                Terraria.ID.ItemID.NightKey,
-                Terraria.ID.ItemID.LightKey,
-            }.Contains(selectedItem.netID)
-            || !(
-                !TShockPlugin.LastSummon.ContainsKey(player.Name)
-                || (DateTime.Now - TShockPlugin.LastSummon[player.Name]).Seconds
-                    >= PluginSettings.Config.CooldownInSeconds
+            !new List<int>() { ItemID.NightKey, ItemID.LightKey, ItemID.GoldenKey }.Contains(
+                selectedItem.netID
+            )
+            || (
+                TShockPlugin.LastSummon.ContainsKey(player.Name)
+                && (DateTime.Now - TShockPlugin.LastSummon[player.Name]).Seconds
+                    < PluginSettings.Config.CooldownInSeconds
             )
         )
+        {
             return;
+        }
 
-        int? chestIndex = null;
-        Item? chest = null;
+        short mimicType = -1; // netId
+        short chestIndex = -1;
         if (PluginSettings.Config.RequireChest)
         {
-            chestIndex = GetChestIndex(player);
-            if (chestIndex == null)
+            chestIndex = Helpers.GetChestIndex(player);
+            if (chestIndex == -1)
             {
                 player.SendErrorMessage(
                     "You must have at least one chest of any type in your inventory to summon a Mimic."
                 );
                 return;
             }
-
-            chest = player.TPlayer.inventory[(int)chestIndex];
         }
 
-        if (!SpawnMimic(player, selectedItem.netID == Terraria.ID.ItemID.NightKey))
-            return;
-
-        // Consume key
-        TShockPlugin.LastSummon[player.Name] = DateTime.Now;
-        selectedItem.stack--;
-        NetMessage.SendData(
-            (int)PacketTypes.PlayerSlot,
-            -1,
-            -1,
-            null,
-            playerId,
-            selectedSlot,
-            selectedItem.stack,
-            selectedItem.prefix,
-            selectedItem.netID
-        );
-
-        // Consume chest if Config.RequireChest
-        if (chest != null && chestIndex != null)
+        if (PluginSettings.Config.WeakerMimics && selectedItem.netID == ItemID.GoldenKey)
+        // Regular Mimic
         {
-            chest.stack--;
-            NetMessage.SendData(
-                (int)PacketTypes.PlayerSlot,
-                -1,
-                -1,
-                null,
-                playerId,
-                (float)chestIndex,
-                chest.stack,
-                chest.prefix,
-                chest.netID
-            );
+            mimicType = player.TPlayer.ZoneSnow ? NPCID.IceMimic : NPCID.Mimic;
         }
-    }
-
-    private static int? GetChestIndex(TSPlayer player)
-    {
-        for (int i = 0; i < NetItem.InventorySlots; i++)
+        else if (selectedItem.netID == ItemID.NightKey)
+        // Big Evil Mimic
         {
-            Item item = player.TPlayer.inventory[i];
-            if (item.Name.EndsWith("Chest"))
+            short[] evilMimicType = { NPCID.BigMimicCorruption, NPCID.BigMimicCrimson };
+            string mode = PluginSettings.Config.Mode.ToLower();
+            mimicType =
+                mode == "biome"
+                    ? (
+                        player.TPlayer.ZoneCorrupt ? evilMimicType[0]
+                        : player.TPlayer.ZoneCrimson ? evilMimicType[1]
+                        : (short)-1
+                    )
+                : mode == "random" ? evilMimicType[Helpers.random.Next(2)]
+                : (WorldGen.crimson ? evilMimicType[1] : evilMimicType[0]); // default
+            if (mode == "biome" && mimicType == -1)
             {
-                return i;
+                player.SendErrorMessage("You have to be in an Evil biome to use this.");
             }
         }
-        return null;
-    }
-
-    private static bool SpawnMimic(TSPlayer player, bool nightKey)
-    {
-        Vector2 playerPosition = player.TPlayer.position;
-        int offset = random.Next(-400, 400);
-        Vector2 position = new(playerPosition.X + offset, playerPosition.Y);
-        List<short> evilMimics = new()
+        else if (selectedItem.netID == ItemID.LightKey)
+        // Big Hallow Mimic
         {
-            Terraria.ID.NPCID.BigMimicCorruption,
-            Terraria.ID.NPCID.BigMimicCrimson,
-        };
-        int type = nightKey
-            ? evilMimics[random.Next(evilMimics.Count)]
-            : Terraria.ID.NPCID.BigMimicHallow;
-        int npcIndex = NPC.NewNPC(null, (int)position.X, (int)position.Y, type);
-        if (npcIndex != 200)
-        {
-            player.SendSuccessMessage($"You summoned a {TShock.Utils.GetNPCById(type).FullName}!");
-            return true;
+            mimicType = NPCID.BigMimicHallow;
         }
-        else
+
+        if (mimicType == -1)
         {
-            player.SendErrorMessage("Can't summon a Mimic. The NPC cap might have been reached.");
-            return false;
+            return;
+        }
+
+        // Spawn mimic
+        bool success = Helpers.SpawnMimic(player, mimicType);
+        if (success)
+        {
+            TShockPlugin.LastSummon[player.Name] = DateTime.Now;
+            selectedItem.stack--;
+            player.SendData(PacketTypes.PlayerSlot, "", player.Index, selectedItemIndex);
+            if (chestIndex != -1)
+            {
+                player.TPlayer.inventory[chestIndex].stack--;
+                player.SendData(PacketTypes.PlayerSlot, "", player.Index, chestIndex);
+            }
         }
     }
 }
