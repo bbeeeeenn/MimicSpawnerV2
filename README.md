@@ -11,7 +11,7 @@ A plugin that allows players to instantly spawn a Mimic.
 ## Configuration
 
 -  **`Enabled`** (Default: `true`) — Enable or disable the plugin.
--  **`RequireChest`** (Default: `true`) — If `true`, players must have at least one chest in their inventory to summon a Mimic.
+-  **`RequireChest`** (Default: `false`) — If `true`, players must have at least one chest in their inventory to summon a Mimic.
 -  **`CooldownInSeconds`** (Default: `1`) — Cooldown (in seconds) before a player can spawn another Mimic.
 -  **`Mode`** (Default: `"biome"`) — Determines how the type of Evil Mimic is chosen. Available modes:
    -  `default`: Uses the evil type the world can naturally spawn (Corrupt or Crimson). Can be summoned anywhere.
