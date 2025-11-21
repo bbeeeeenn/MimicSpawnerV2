@@ -10,7 +10,7 @@ public class Helpers
 
     public static short GetChestIndex(TSPlayer player)
     {
-        for (short i = 0; i < NetItem.InventorySlots; i++)
+        for (short i = 0; i < 50; i++)
         {
             Item item = player.TPlayer.inventory[i];
             if (item.Name.EndsWith("Chest") && item.stack > 0)
