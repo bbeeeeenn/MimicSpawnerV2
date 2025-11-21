@@ -22,7 +22,7 @@ public class PluginSettings
     public string Mode = "biome";
     public string[] Help =
     {
-        "You use [Key of Night] to summon an Evil Mimic",
+        "You use [Key of Night] to summon an Evil Mimic, and [Key of Light] to summon a Hallow Mimic",
         "Available modes: 'default', 'biome', 'random'",
         "default: Follows the type of evil mimic the world would normally spawn. Recommended for the 'getfixedboi' seed, where the Evil Mimic type changes each day. Can summon anywhere.",
         "biome: When using a [Night Key], you must be in an evil biome. The type of Evil Mimic that appears will match the biome.",
