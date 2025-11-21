@@ -20,7 +20,11 @@ public class OnGetData : Models.Event
 
     private void EventHandler(GetDataEventArgs args)
     {
-        if (!PluginSettings.Config.Enabled || args.MsgID != PacketTypes.PlayerUpdate)
+        if (
+            !PluginSettings.Config.Enabled
+            || args.MsgID != PacketTypes.PlayerUpdate
+            || !Main.hardMode
+        )
         {
             return;
         }
