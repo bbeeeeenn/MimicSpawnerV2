@@ -6,7 +6,7 @@ A plugin that allows players to instantly spawn a Mimic.
 
 -  Hold a **Key of Night** or **Key of Light**, depending on which type of Mimic you want to spawn.
 -  Use the key as if it were a consumable item to summon the Mimic instantly.
--  **Note:** Using a **Key of Night** will randomly spawn either a **Corrupt Mimic** or a **Crimson Mimic**.
+-  Note: The Corrupt Mimic has several spawn modes; see details below.
 
 ## Configuration
 
