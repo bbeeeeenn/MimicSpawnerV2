@@ -23,11 +23,15 @@ public class Helpers
 
     public static bool SpawnMimic(TSPlayer player, short type)
     {
-        Vector2 playerPosition = player.TPlayer.position;
-        int offset = random.Next(-400, 400);
-        Vector2 position = new(playerPosition.X + offset, playerPosition.Y);
-
-        int npcIndex = NPC.NewNPC(null, (int)position.X, (int)position.Y, type);
+        TShock.Utils.GetRandomClearTileWithInRange(
+            player.TileX,
+            player.TileY,
+            20,
+            10,
+            out int tileX,
+            out int tileY
+        );
+        int npcIndex = NPC.NewNPC(null, tileX * 16, tileY * 16, type);
         if (npcIndex != 200)
         {
             player.SendSuccessMessage($"You summoned a {TShock.Utils.GetNPCById(type).FullName}!");
