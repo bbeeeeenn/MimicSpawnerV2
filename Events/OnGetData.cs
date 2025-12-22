@@ -52,9 +52,8 @@ public class OnGetData : Models.Event
                 selectedItem.netID
             )
             || (
-                TShockPlugin.LastSummon.ContainsKey(player.Name)
-                && (DateTime.Now - TShockPlugin.LastSummon[player.Name]).Seconds
-                    < PluginSettings.Config.CooldownInSeconds
+                (DateTime.Now - player.GetData<DateTime>("lastSummon")).TotalMilliseconds
+                >= PluginSettings.Config.CooldownInSeconds * 1000
             )
         )
         {
@@ -114,7 +113,7 @@ public class OnGetData : Models.Event
         bool success = Helpers.SpawnMimic(player, mimicType);
         if (success)
         {
-            TShockPlugin.LastSummon[player.Name] = DateTime.Now;
+            player.SetData("lastSummon", DateTime.Now);
             selectedItem.stack--;
             player.SendData(PacketTypes.PlayerSlot, "", player.Index, selectedItemIndex);
             if (chestIndex != -1)

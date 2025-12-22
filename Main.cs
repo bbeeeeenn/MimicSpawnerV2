@@ -34,7 +34,5 @@ namespace MimicSpawner
             }
             base.Dispose(disposing);
         }
-
-        public static readonly Dictionary<string, DateTime> LastSummon = new();
     }
 }
