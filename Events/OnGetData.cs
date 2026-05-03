@@ -1,4 +1,3 @@
-using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using TerrariaApi.Server;
@@ -49,11 +48,11 @@ public class OnGetData : Models.Event
 
         if (
             !new List<int>() { ItemID.NightKey, ItemID.LightKey, ItemID.GoldenKey }.Contains(
-                selectedItem.netID
+                selectedItem.type
             )
             || (
                 (DateTime.Now - player.GetData<DateTime>("lastSummon")).TotalMilliseconds
-                >= PluginSettings.Config.CooldownInSeconds * 1000
+                < PluginSettings.Config.CooldownInSeconds * 1000
             )
         )
         {
@@ -74,12 +73,12 @@ public class OnGetData : Models.Event
             }
         }
 
-        if (PluginSettings.Config.WeakerMimics && selectedItem.netID == ItemID.GoldenKey)
+        if (PluginSettings.Config.WeakerMimics && selectedItem.type == ItemID.GoldenKey)
         // Regular Mimic
         {
             mimicType = player.TPlayer.ZoneSnow ? NPCID.IceMimic : NPCID.Mimic;
         }
-        else if (selectedItem.netID == ItemID.NightKey)
+        else if (selectedItem.type == ItemID.NightKey)
         // Big Evil Mimic
         {
             short[] evilMimicType = { NPCID.BigMimicCorruption, NPCID.BigMimicCrimson };
@@ -98,7 +97,7 @@ public class OnGetData : Models.Event
                 player.SendErrorMessage("You have to be in an Evil biome to use this.");
             }
         }
-        else if (selectedItem.netID == ItemID.LightKey)
+        else if (selectedItem.type == ItemID.LightKey)
         // Big Hallow Mimic
         {
             mimicType = NPCID.BigMimicHallow;
